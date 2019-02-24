@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, ActivityIndicator, TextInput, Button } from 'react-native';
 import Weather from './components/Weather';
+import { API_KEY } from './utils/OpenWeatherMapApiKey';
 
 export default class App extends React.Component {
   state = {
@@ -29,23 +30,21 @@ export default class App extends React.Component {
 			},
       { enableHighAccuracy: true, timeout: 20000 }
     );
-    this.setState({
-      isLoading: false
-    });
   }
 
   getWeather() {
     let url;
     url = this.state.chosenCity !== null ?
-     'https://api.openweathermap.org/data/2.5/weather?q=' + this.state.chosenCity + '&units=metric&appid=24397676dee49d7a99746855d1f357ed' :
-     'https://api.openweathermap.org/data/2.5/forecast?lat=' + this.state.latitude + '&lon=' + this.state.longitude + '&units=metric&appid=24397676dee49d7a99746855d1f357ed';
+     'https://api.openweathermap.org/data/2.5/weather?q=' + this.state.chosenCity + '&units=metric&appid=' + API_KEY :
+     'https://api.openweathermap.org/data/2.5/forecast?lat=' + this.state.latitude + '&lon=' + this.state.longitude + '&units=metric&appid=' + API_KEY;
 
 		fetch(url)
 		.then(response => response.json())
 		.then(data => {
 			this.setState(
         (prevState) => ({
-				  forecast: data
+				  forecast: data,
+          isLoading: false
         })
 			);
 		});
@@ -55,13 +54,13 @@ export default class App extends React.Component {
     return (
       <View style={styles.container}>
         {this.state.isLoading ? (
-          <View>
+          <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="#0000ff" />
           </View>
-        ) : (
-            <Weather
-              forecast={this.state.forecast}/>
-        )} 
+        ) : 
+         (<Weather
+            forecast={this.state.forecast}/>)
+        } 
       </View>
     );
   }
@@ -74,4 +73,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+    loadingContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FFFDE4'
+  }
 });
