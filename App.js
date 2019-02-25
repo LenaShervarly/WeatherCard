@@ -15,6 +15,13 @@ export default class App extends React.Component {
   };
   
   componentDidMount() {
+    //date will be mapped to location in future updates
+    const date = new Date();
+    this.setState(
+      (prevState) => ({
+        date : date
+      })
+    );
     this.getLocation();
   }
   
@@ -33,8 +40,7 @@ export default class App extends React.Component {
   }
 
   getWeather() {
-    let url;
-    url = this.state.chosenCity !== null ?
+    const url = this.state.chosenCity !== null ?
      'https://api.openweathermap.org/data/2.5/weather?q=' + this.state.chosenCity + '&units=metric&appid=' + API_KEY :
      'https://api.openweathermap.org/data/2.5/forecast?lat=' + this.state.latitude + '&lon=' + this.state.longitude + '&units=metric&appid=' + API_KEY;
 
@@ -59,7 +65,8 @@ export default class App extends React.Component {
           </View>
         ) : 
          (<Weather
-            forecast={this.state.forecast}/>)
+            forecast={this.state.forecast}
+            date={this.state.date}/>)
         } 
       </View>
     );
@@ -72,6 +79,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#2899b7',
     alignItems: 'center',
     justifyContent: 'center',
+    height: '100%'
   },
     loadingContainer: {
     flex: 1,
